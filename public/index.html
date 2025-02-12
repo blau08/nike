@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Data Science Portfolio</title>
+  <!-- Chart.js Library for the dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 2rem;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #3498db;
+    }
+    section {
+      background-color: #fff;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    section h2 {
+      margin-top: 0;
+      color: #3498db;
+    }
+
+    /* About Me Section */
+    .about-me {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .about-me img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1.5rem;
+    }
+    .about-me p {
+      flex: 1;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* Project Section */
+    .project p {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .tech-list {
+      margin: 1rem 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .tech-list li {
+      background-color: #3498db;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    /* Data Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    thead {
+      background-color: #3498db;
+      color: white;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      position: relative;
+      cursor: pointer;
+    }
+    th::after {
+      content: ' '; /* Placeholder for sorting arrow */
+      position: absolute;
+      right: 8px;
+      opacity: 0.5;
+    }
+    th.sorted-asc::after {
+      content: '▲';
+    }
+    th.sorted-desc::after {
+      content: '▼';
+    }
+    th:hover::after {
+      opacity: 1;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    /* Info Icon */
+    .info-container {
+      text-align: center;
+      margin-top: 1rem;
+      position: relative;
+    }
+    #info-symbol {
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+    #hover-sign {
+      display: none;
+      position: absolute;
+      background-color: #3498db;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>My Data Science Portfolio</h1>
+    </header>
+
+    <!-- About Me Section -->
+    <section id="about">
+      <h2>About Me</h2>
+      <div class="about-me">
+        <!-- Replace "your_image_url_here.jpg" with the URL of your uploaded picture -->
+        <img src="./images/fudan.jpg" alt="Brian Lau" />
+        <p>
+          Hello! I'm Brian Lau, a passionate data scientist and developer who loves transforming raw data into actionable insights. With expertise in data visualization, statistical analysis, and machine learning, I enjoy solving real-world problems and sharing my work with the community. Welcome to my portfolio!
+        </p>
+      </div>
+    </section>
+
+    <!-- Project Section -->
+    <section id="project">
+      <h2>Project: Factory Shoe Production</h2>
+      <p>
+        This project showcases a real-time dashboard for analyzing shoe production data across multiple factories in China, Vietnam, and Indonesia. The dashboard dynamically fetches production metrics from a cloud-hosted Supabase database.
+      </p>
+      <p><strong>Technologies &amp; Skills Used:</strong></p>
+      <ul class="tech-list">
+        <li>JavaScript</li>
+        <li>HTML &amp; CSS</li>
+        <li>Supabase</li>
+        <li>Data Visualization</li>
+        <li>API Integration</li>
+      </ul>
+
+      <!-- Data Table -->
+      <div style="overflow-y: auto; max-height: 400px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Factory</th>
+              <th>Country</th>
+              <th>Production</th>
+              <th>Pairs per Minute</th>
+            </tr>
+          </thead>
+          <tbody id="data-table">
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Info Icon -->
+      <div class="info-container">
+        <span id="info-symbol">ℹ️</span>
+        <div id="hover-sign">Click for more info</div>
+      </div>
+    </section>
+
+    <!-- ETL Process Section -->
+    <section id="etl">
+      <h2>ETL Process: From Raw Data to SQL Server</h2>
+      <p>
+        The process starts by collecting raw data files from Asia factories in TXT or CSV format. Using VBA in Excel, we perform data cleansing, transformation, and aggregation. Once the data is refined, it is uploaded into a SQL Server database to serve as the single source of truth.
+      </p>
+      <ol>
+        <li><strong>Extract:</strong> Retrieve TXT or CSV files from various sources.</li>
+        <li><strong>Transform:</strong> Use VBA in Excel to clean, validate, and transform the data.</li>
+        <li><strong>Load:</strong> Upload the processed data into SQL Server.</li>
+      </ol>
+      <p>
+        This standardized database is then used to create dynamic dashboards and reports to monitor and compare factory efficiencies.
+      </p>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+      <h2>Factory Efficiency Dashboard</h2>
+      <!-- Canvas element for Chart.js -->
+      <canvas id="efficiencyChart" width="400" height="200"></canvas>
+    </section>
+  </div>
+
+  <script>
+    // Info icon hover and click events
+    const infoSymbol = document.getElementById('info-symbol');
+    const hoverSign = document.getElementById('hover-sign');
+
+    infoSymbol.addEventListener('mouseover', () => {
+      hoverSign.style.display = 'block';
+    });
+
+    infoSymbol.addEventListener('mouseout', () => {
+      hoverSign.style.display = 'none';
+    });
+
+    infoSymbol.addEventListener('click', () => {
+      alert('More information about the shoe production data.');
+    });
+
+    // Supabase configuration
+    const SUPABASE_URL = "https://vxnjspzbmozhzkqpzpuy.supabase.co"; 
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4bmpzcHpibW96aHprcXB6cHV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkxNzE1NDIsImV4cCI6MjA1NDc0NzU0Mn0.sfIeWrouFBlD-oJuxqRJ_MwMwQs81CrOnLKefXRKc70";
+
+    // Fetch data from Supabase and populate the table,
+    // then update the dashboard chart with aggregated efficiency data.
+    async function loadData() {
+      try {
+        console.log('Fetching data from Supabase...');
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/nike?select=*`, {
+          headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Data fetched:', data);
+        const tableBody = document.getElementById("data-table");
+
+        // For the dashboard aggregation: group data by factory
+        const factoryData = {};
+
+        data.forEach(row => {
+          const production = parseFloat(row.Production) || 0;
+          const pairsPerMinute = production / 480;  // Assuming 480 minutes in a shift
+
+          // Populate the table row
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.Date}</td>
+            <td>${row.Factory}</td>
+            <td>${row.Country}</td>
+            <td>${production}</td>
+            <td>${pairsPerMinute.toFixed(2)}</td>
+          `;
+          tableBody.appendChild(tr);
+
+          // Group data by factory for the dashboard
+          const factory = row.Factory;
+          if (!factoryData[factory]) {
+            factoryData[factory] = { totalProduction: 0, count: 0 };
+          }
+          factoryData[factory].totalProduction += production;
+          factoryData[factory].count++;
+        });
+
+        // Update the dashboard chart with aggregated data
+        updateDashboard(factoryData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    // Function to update the dashboard using Chart.js
+    function updateDashboard(factoryData) {
+      const labels = [];
+      const avgEfficiency = []; // average pairs per minute for each factory
+
+      for (const factory in factoryData) {
+        labels.push(factory);
+        const { totalProduction, count } = factoryData[factory];
+        // Calculate average production per shift then convert to pairs per minute
+        const averageProduction = totalProduction / count;
+        avgEfficiency.push((averageProduction / 480).toFixed(2));
+      }
+
+      const ctx = document.getElementById('efficiencyChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Average Pairs per Minute',
+            data: avgEfficiency,
+            backgroundColor: 'rgba(52, 152, 219, 0.6)',
+            borderColor: 'rgba(52, 152, 219, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Pairs per Minute'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+
+    // Sort table functionality
+    function sortTable(columnIndex, isNumeric) {
+      const table = document.querySelector("table");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.rows);
+
+      const sortedRows = rows.sort((a, b) => {
+        const aText = a.cells[columnIndex].textContent.trim();
+        const bText = b.cells[columnIndex].textContent.trim();
+        return isNumeric 
+          ? parseFloat(aText) - parseFloat(bText)
+          : aText.localeCompare(bText);
+      });
+
+      // Remove existing rows and append sorted rows
+      tbody.innerHTML = "";
+      tbody.append(...sortedRows);
+    }
+
+    // Add click events to table headers for sorting
+    document.querySelectorAll("th").forEach((header, index) => {
+      header.addEventListener("click", () => {
+        // Assuming columns 3 and 4 (index 3 & 4) are numeric
+        const isNumeric = index === 3 || index === 4;
+        sortTable(index, isNumeric);
+      });
+    });
+
+    // Load data on page load
+    loadData();
+  </script>
+</body>
+</html>
